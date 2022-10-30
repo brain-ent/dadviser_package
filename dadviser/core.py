@@ -17,6 +17,9 @@ logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
 
 class MPValue:
+	"""
+
+	"""
 	def __init__(self, val=0):
 		self.__value = Value('i', val)
 
@@ -47,6 +50,9 @@ def read_file(filepath, encoding=None):
 
 
 class DataExtractor:
+	"""
+
+	"""
 	def __init__(self):
 		download('stopwords')
 		download('punkt')
@@ -130,10 +136,10 @@ class DAdviser:
 
 	def docs2model(self):
 		logging.debug("Recoding filenames into the index.txt file")
-		abs_path_files = [os.path.join(self.texts_folder, f) for f in sorted(os.listdir(self.texts_folder))[:500]]
-
+		abs_path_files = [os.path.join(self.texts_folder, f) for f in os.listdir(self.texts_folder)]
+		#
 		file_tokens = sorted(self.data_extractor.extract(abs_path_files), key=lambda x: x[0])
-
+		#
 		self.index_filenames = [filename for filename, tokens in file_tokens]
 		# init filenames
 		with open(self.index_path, mode='w', encoding='utf-8') as file:
@@ -144,17 +150,17 @@ class DAdviser:
 		self.dictionary = gensim.corpora.Dictionary(tokens)
 		logging.debug(f"Number of words in dictionary: {len(self.dictionary)}")
 
-		logging.debug("Forming a corpus (a list of bags of words)...")
 		# a bag-of-words representation for a document just lists the number of times each word occurs in the document
+		logging.debug("Forming a corpus (a list of bags of words)...")
 		self.corpus = list(map(self.dictionary.doc2bow, tokens))
 
-		logging.debug(f"Forming a tf_idf....")
 		# tf_idf is a constructor, which calculates inverse document counts for all terms in the training corpus
+		logging.debug(f"Forming a tf_idf....")
 		self.tf_idf = gensim.models.TfidfModel(self.corpus)
 		logging.debug(f"Size of tf_idf: {len(self.tf_idf[self.corpus])}")
 
-		logging.debug("Compute similarities across a collection of documents...")
 		# building the index, and storing index matrix at "index/" folder
+		logging.debug("Compute similarities across a collection of documents...")
 		self.sims = gensim.similarities.Similarity(self.index_path, self.tf_idf[self.corpus], num_features=len(self.dictionary))
 
 		logging.debug("Save the results...")
