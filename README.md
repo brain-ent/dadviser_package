@@ -36,11 +36,11 @@
 Пример  вызова программного модуля  из кода: 
 ```Python
 
-from dadviser.core import DAdviser  
+from dadviser.core import DAdviser, read_file  
 documents_path = “/путь/к/директории/с/документами” 
 adviser = DAdviser(documents_path) 
 compare_with_text = read_file(“/путь/к/файлу/для/проверки”) 
-result = adviser.get_similarity(compare_with_text, top_list=10)
+result = adviser.get_similarity(compare_with_text, toplist=10)
 print(result)
 
  ``` 
