@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dadviser</title>
+</head>
+<body>
+
+    <h3>Выберите .txt файл для анализа</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="files">
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if result %}
+        <h3>Результат</h3>
+        {% for doc in result %}
+            <p>Имя файла: {{ doc.name }}</p>
+            <p>Процент совпадения: {{ doc.percent }}%</p>
+            <hr/>
+        {% endfor %}
+    {% endif %}
+
+</body>
+</html>
