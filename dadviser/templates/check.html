@@ -3,24 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Dadviser</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
 <body>
 
-    <h3>Выберите .txt файл для анализа</h3>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <strong>Dadviser</strong>
+            </a>
+        </div>
+    </div>
+</header>
 
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="files">
-        <input type="submit" value="Submit">
-    </form>
+<main>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h2 class="fw-light">Начало работы</h2>
+                <p class="lead text-muted">Выберите .txt файл для анализа</p>
 
-    {% if result %}
-        <h3>Результат</h3>
-        {% for doc in result %}
-            <p>Имя файла: {{ doc.name }}</p>
-            <p>Процент совпадения: {{ doc.percent }}%</p>
-            <hr/>
-        {% endfor %}
-    {% endif %}
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="file" name="files" accept=".txt">
+                    <input type="submit" value="Отправить">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <h2>Ошибка:</h2>
+                    <ul class=flashes>
+                        {% for category, message in messages %}
+                            <div class="{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            {% if result %}
+                <h3>Результат</h3>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                {% for doc in result %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <p class="card-text">Имя файла: {{ doc.name }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Процент совпадения: {{ doc.percent }}%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="text-muted py-5">
+    <div class="container">
+        <p class="float-end mb-1">
+            <a href="#">Вернуться наверх</a>
+        </p>
+        <p class="mb-1">Dadviser</p>
+    </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 
 </body>
 </html>
